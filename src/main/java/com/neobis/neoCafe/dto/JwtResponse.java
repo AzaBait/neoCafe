@@ -2,11 +2,12 @@ package com.neobis.neoCafe.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class CustomerDto {
+@NoArgsConstructor
+public class JwtResponse {
 
-    private String email;
-    private Double bonus;
+    private String token;
 }

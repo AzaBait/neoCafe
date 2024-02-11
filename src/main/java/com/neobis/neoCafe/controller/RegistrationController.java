@@ -3,9 +3,9 @@ package com.neobis.neoCafe.controller;
 import com.neobis.neoCafe.dto.CustomerDto;
 import com.neobis.neoCafe.dto.RegisterDto;
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
-import com.neobis.neoCafe.entity.Customer;
-import com.neobis.neoCafe.mapper.CustomerMapper;
-import com.neobis.neoCafe.service.CustomerService;
+import com.neobis.neoCafe.entity.User;
+import com.neobis.neoCafe.mapper.UserMapper;
+import com.neobis.neoCafe.service.UserService;
 import com.neobis.neoCafe.service.RegistrationCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,21 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class RegistrationController {
 
-    private final CustomerService customerService;
-    private final CustomerMapper customerMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
     private final RegistrationCodeService registrationCodeService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerNewCustomer(@Validated @RequestBody RegisterDto registerDto) {
-        Customer registeredCustomer = customerMapper.registerDtoToEntity(registerDto);
-        customerService.register(registeredCustomer);
+        User registeredUser = userMapper.registerDtoToEntity(registerDto);
+        userService.register(registeredUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Код потверждения отправлено на почту!");
     }
 
     @PostMapping("/verifyRegistrationCode")
     public ResponseEntity<CustomerDto> verifyRegistrationCode(@RequestBody RegistrationCodeRequest registrationCodeRequest) {
-        Customer savedCustomer = customerService.save(registrationCodeRequest);
-        CustomerDto customerDto = customerMapper.registerEntityToDto(savedCustomer);
+        User savedUser = userService.save(registrationCodeRequest);
+        CustomerDto customerDto = userMapper.registerEntityToDto(savedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerDto);
     }
 
