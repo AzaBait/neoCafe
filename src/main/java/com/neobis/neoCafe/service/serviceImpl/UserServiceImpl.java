@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         Role customerRole;
         try {
-            customerRole = roleService.findByName("ROLE_USER").orElseThrow(
-                    () -> new RoleNotFoundException("Роль 'USER' не найдена!"));
+            customerRole = roleService.findByName("ROLE_CUSTOMER").orElseThrow(
+                    () -> new RoleNotFoundException("Роль 'CUSTOMER' не найдена!"));
         } catch (RoleNotFoundException e) {
             throw new RuntimeException(e);
         }
