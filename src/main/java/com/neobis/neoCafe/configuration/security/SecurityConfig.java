@@ -42,15 +42,13 @@ public class SecurityConfig {
                     return configuration;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/register", "/api/verifyRegistrationCode",
+                        .requestMatchers("/api/register", "/api/verifyRegistrationCode", "/api/admin/auth",
                                 "/error",
                                 "/api/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/auth").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
 
