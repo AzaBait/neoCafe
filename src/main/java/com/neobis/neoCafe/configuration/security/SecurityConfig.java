@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/register", "/api/verifyRegistrationCode",
                                 "/error",
-                                "/api/auth",
+                                "/api/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/auth/**").permitAll()

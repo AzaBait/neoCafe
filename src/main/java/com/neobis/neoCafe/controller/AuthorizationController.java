@@ -25,9 +25,14 @@ public class AuthorizationController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Код потверждения отправлено на почту!");
     }
 
-    @PostMapping("/VerifyCode")
-    public ResponseEntity<?> VerifyCodeAndGetToken(@RequestBody RegistrationCodeRequest codeRequest) {
-        String token = authorizationService.authByCodeAndGetToken(codeRequest);
+    @PostMapping("/verifyCode")
+    public ResponseEntity<?> verifyCodeAndGetToken(@RequestBody RegistrationCodeRequest codeRequest) {
+        String token = null;
+        try {
+            token = authorizationService.authenticateAndGetToken(codeRequest);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok(new JwtResponse(token));
     }
 }
