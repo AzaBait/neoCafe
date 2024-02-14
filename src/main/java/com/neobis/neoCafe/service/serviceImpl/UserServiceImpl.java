@@ -1,23 +1,28 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
-import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.entity.Role;
+import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.exception.EmailNotFoundException;
 import com.neobis.neoCafe.exception.UsernameNotFoundException;
+import com.neobis.neoCafe.repository.RegistrationCodeRepo;
 import com.neobis.neoCafe.repository.UserRepo;
-import com.neobis.neoCafe.service.UserService;
 import com.neobis.neoCafe.service.EmailService;
 import com.neobis.neoCafe.service.RegistrationCodeService;
 import com.neobis.neoCafe.service.RoleService;
+import com.neobis.neoCafe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -29,6 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleService roleService;
     private final EmailService emailService;
     private final RegistrationCodeService registrationCodeService;
+    private RegistrationCodeRepo registrationCodeRepo;
 
 
     @Override
@@ -60,6 +66,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user1.setRole(customerRole);
         return userRepo.save(user1);
     }
+
     @Override
     public Optional<User> findByEmail(String email) {
         Optional<User> customerWithEmail = userRepo.findByEmail(email);
@@ -68,6 +75,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return customerWithEmail;
     }
+
     @Override
     public void updateCustomerStatus(User user) {
         user.setEnabled(true);
@@ -79,6 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> optionalUser = userRepo.findByUsername(username);
         return optionalUser.map(User::isEnabled).orElse(false);
     }
+
     @Override
     public Optional<User> findByUsername(String username) {
         Optional<User> optionalCustomer = userRepo.findByUsername(username);
@@ -90,9 +99,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
-        Optional<User> user = userRepo.findByEmail(email);
-        return user.orElseThrow(() ->new EmailNotFoundException
-                ("Пользователя с такой почтой " + email + " не найдено!"));
+        Optional<User> userOptional = userRepo.findByEmail(email);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("Пользователя с такой почтой " + email + " не найдено!"));
+        Role role = user.getRole();
+        Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(role.getName()));
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authorities);
     }
 
 }

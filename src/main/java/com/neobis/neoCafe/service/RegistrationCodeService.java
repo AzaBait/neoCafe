@@ -11,4 +11,5 @@ public interface RegistrationCodeService {
     boolean validateCode(String code);
 
     RegistrationCode findByCode(String code);
+    RegistrationCode findByEmail(String email);
 }

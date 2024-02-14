@@ -24,7 +24,6 @@ public class RegistrationController {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    private final RegistrationCodeService registrationCodeService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerNewCustomer(@Validated @RequestBody RegisterDto registerDto) {
