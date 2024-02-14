@@ -1,6 +1,7 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.entity.RegistrationCode;
+import com.neobis.neoCafe.exception.EmailNotFoundException;
 import com.neobis.neoCafe.exception.RegistrationCodeNotFoundException;
 import com.neobis.neoCafe.repository.RegistrationCodeRepo;
 import com.neobis.neoCafe.service.RegistrationCodeService;
@@ -48,4 +49,14 @@ public class RegistrationCodeServiceImpl implements RegistrationCodeService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public RegistrationCode findByEmail(String email) {
+        try {
+            return registrationCodeRepo.findByEmail(email);
+        } catch (EmailNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

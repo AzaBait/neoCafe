@@ -11,7 +11,7 @@ public class EmailAuthenticationToken implements Authentication {
     private String email;
     private boolean authenticated;
     private final UserDetails userDetails;
-    public EmailAuthenticationToken(String username, UserServiceImpl userService) {
+    public EmailAuthenticationToken(String email, UserServiceImpl userService) {
         this.userDetails = userService.loadUserByUsername(email); // Получаем информацию о пользователе по email
         this.authenticated = userDetails != null;
     }
