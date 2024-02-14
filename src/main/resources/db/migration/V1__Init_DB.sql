@@ -1,3 +1,4 @@
+
 create table if not exists registration_codes (
         id bigserial not null,
         code varchar(255),
