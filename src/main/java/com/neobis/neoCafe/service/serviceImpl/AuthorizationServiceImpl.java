@@ -2,9 +2,7 @@ package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.configuration.security.jwt.JwtTokenUtil;
 import com.neobis.neoCafe.dto.AdminJwtRequest;
-import com.neobis.neoCafe.dto.RegisterDto;
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
-import com.neobis.neoCafe.entity.RegistrationCode;
 import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.repository.RegistrationCodeRepo;
 import com.neobis.neoCafe.repository.UserRepo;
@@ -12,6 +10,9 @@ import com.neobis.neoCafe.service.AuthorizationService;
 import com.neobis.neoCafe.service.EmailService;
 import com.neobis.neoCafe.service.RegistrationCodeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     private final JwtTokenUtil jwtTokenUtil;
@@ -32,6 +34,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final RegistrationCodeService codeService;
     private final EmailService emailService;
     private final RegistrationCodeRepo registrationCodeRepo;
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationServiceImpl.class);
 
     @Override
     public String authByEmail(String email) {
@@ -50,30 +53,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public String authByCodeAndGetToken(RegistrationCodeRequest codeRequest) {
+    public String authenticateAndGetToken(RegistrationCodeRequest jwtRequest) {
         try {
-            RegistrationCode registrationCode = registrationCodeRepo.findByCode(codeRequest.getCode());
-            if (registrationCode == null) {
-                throw new RuntimeException("Неверный код регистрации!");
-            }
-            String userEmail = registrationCode.getEmail();
-            Optional<User> userInDB = userRepo.findByEmail(userEmail);
-            if (userInDB.isEmpty()) {
-                throw new RuntimeException("Пользователя с такой почтой не найдено");
-            }
-            User user = userInDB.get();
-            userService.updateCustomerStatus(user);
-            UserDetails userDetails = userService.loadUserByUsername(userEmail);
-            return jwtTokenUtil.generateToken(userDetails);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка при аутентификации по коду");
-        }
-    }
-
-    @Override
-    public String authenticateAndGetToken(RegisterDto jwtRequest) {
-        try {
-            UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
+            UserDetails userDetails = userService.loadUserByEmail(jwtRequest.getEmail());
             return jwtTokenUtil.generateToken(userDetails);
         } catch (Exception e) {
             throw new RuntimeException(e);

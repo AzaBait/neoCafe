@@ -110,4 +110,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 authorities);
     }
 
+    @Override
+    public UserDetails loadUserByEmail(String email) throws EmailNotFoundException {
+        Optional<User> user = userRepo.findByEmail(email);
+        return user.orElseThrow(() -> new EmailNotFoundException
+                ("Пользователя с такой почтой " + email + " не найдено!"));
+    }
+
 }
