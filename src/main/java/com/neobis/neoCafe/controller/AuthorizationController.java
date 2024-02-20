@@ -27,7 +27,7 @@ public class AuthorizationController {
 
     @PostMapping("/verifyCode")
     public ResponseEntity<?> verifyCodeAndGetToken(@RequestBody RegistrationCodeRequest codeRequest) {
-        String token = null;
+        String token;
         try {
             token = authorizationService.authenticateAndGetToken(codeRequest);
         } catch (Exception e) {

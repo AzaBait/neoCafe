@@ -3,7 +3,9 @@ package com.neobis.neoCafe.service.serviceImpl;
 import com.neobis.neoCafe.configuration.security.jwt.JwtTokenUtil;
 import com.neobis.neoCafe.dto.AdminJwtRequest;
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
+import com.neobis.neoCafe.entity.RegistrationCode;
 import com.neobis.neoCafe.entity.User;
+import com.neobis.neoCafe.exception.EmailNotFoundException;
 import com.neobis.neoCafe.repository.RegistrationCodeRepo;
 import com.neobis.neoCafe.repository.UserRepo;
 import com.neobis.neoCafe.service.AuthorizationService;
@@ -55,6 +57,14 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public String authenticateAndGetToken(RegistrationCodeRequest jwtRequest) {
         try {
+            String code = jwtRequest.getCode();
+            RegistrationCode registrationCode = registrationCodeRepo.findByCode(code);
+            if (registrationCode == null || !code.equals(jwtRequest.getCode())) {
+                throw new RuntimeException("Код введен неверно, попробуйте еще раз");
+            }
+            User user = userService.findByEmail(jwtRequest.getEmail()).orElseThrow(() ->
+                    new EmailNotFoundException("Почта указана неверно"));
+            userService.updateCustomerStatus(user);
             UserDetails userDetails = userService.loadUserByEmail(jwtRequest.getEmail());
             return jwtTokenUtil.generateToken(userDetails);
         } catch (Exception e) {
@@ -70,7 +80,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
             return jwtTokenUtil.generateToken(userDetails);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Данные введены неверно, попробуйте еще раз");
         }
     }
 

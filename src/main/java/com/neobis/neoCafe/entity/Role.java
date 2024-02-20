@@ -1,5 +1,6 @@
 package com.neobis.neoCafe.entity;
 
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

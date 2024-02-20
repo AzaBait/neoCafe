@@ -1,7 +1,7 @@
 package com.neobis.neoCafe.entity;
 
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @Getter
@@ -10,12 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "registrationCodes")
-public class RegistrationCode {
-
+@Table(name = "categories")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code;
-    private String email;
+    private String name;
 }

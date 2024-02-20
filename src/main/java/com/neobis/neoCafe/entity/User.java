@@ -10,14 +10,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
@@ -25,11 +26,16 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
+    private String firstname;
     private String email;
     private Double bonus;
     private LocalDate birthday;
-    private String workSchedule;
-    private String branch;
+    @ManyToMany(mappedBy = "users")
+    @ToString.Exclude
+    private List<WorkSchedule> workSchedules;
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
