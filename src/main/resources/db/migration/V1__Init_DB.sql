@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS  branches (
     id BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
     name VARCHAR(255),
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS coffee_compositions (
  CREATE TABLE IF NOT EXISTS employee_work_schedule (
         employee_id BIGINT NOT NULL,
         work_schedule_id BIGINT NOT NULL
+
     );
 CREATE TABLE IF NOT EXISTS images (
     id BIGSERIAL PRIMARY KEY NOT NULL,

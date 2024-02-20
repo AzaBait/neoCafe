@@ -1,7 +1,9 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
+
 import com.neobis.neoCafe.entity.RegistrationCode;
+
 import com.neobis.neoCafe.entity.Role;
 import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.exception.EmailNotFoundException;

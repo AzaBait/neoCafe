@@ -1,6 +1,7 @@
 package com.neobis.neoCafe.controller;
 
 import com.neobis.neoCafe.dto.AdminJwtRequest;
+
 import com.neobis.neoCafe.dto.BranchDto;
 import com.neobis.neoCafe.dto.JwtResponse;
 import com.neobis.neoCafe.dto.WorkScheduleDto;
@@ -17,14 +18,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @Slf4j
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
 public class AdminController {
 
     private final AuthorizationService authorizationService;
+
     private final BranchService branchService;
     private final BranchMapper branchMapper;
+
 
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@RequestBody AdminJwtRequest jwtRequest) {
@@ -36,6 +40,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
+
 
     @PostMapping("/newBranch")
     public ResponseEntity<BranchDto> createNewBranch(@ModelAttribute BranchDto branchDto,
@@ -59,5 +64,6 @@ public class AdminController {
         List<BranchDto> branches = branchService.getAll();
         return ResponseEntity.ok().body(branches);
     }
+
     }
 
