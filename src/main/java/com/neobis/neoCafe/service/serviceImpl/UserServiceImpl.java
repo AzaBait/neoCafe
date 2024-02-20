@@ -1,6 +1,9 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
+
+import com.neobis.neoCafe.entity.RegistrationCode;
+
 import com.neobis.neoCafe.entity.Role;
 import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.exception.EmailNotFoundException;
@@ -52,8 +55,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User save(RegistrationCodeRequest registrationCodeRequest) {
         if (!registrationCodeService.validateCode(registrationCodeRequest.getCode())) {
-            throw new RuntimeException("Неверный код регистрации!");
+            throw new RuntimeException("Код введен неверно, попробуйте еще раз");
         }
+        RegistrationCode registrationCode = registrationCodeRepo.findByEmail(registrationCodeRequest.getEmail());
+        if (registrationCode == null || !registrationCode.getEmail().equals(registrationCodeRequest.getEmail())) {
+            throw new RuntimeException("Почта указана неверно");
+        }
+
         Role customerRole;
         try {
             customerRole = roleService.findByName("ROLE_CUSTOMER").orElseThrow(

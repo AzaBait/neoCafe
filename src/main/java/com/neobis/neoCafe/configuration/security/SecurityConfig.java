@@ -49,6 +49,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/admin/newBranch").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/admin/listOfBranches").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
 

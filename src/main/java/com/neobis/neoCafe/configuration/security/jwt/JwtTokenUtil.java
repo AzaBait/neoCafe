@@ -33,7 +33,7 @@ public class JwtTokenUtil {
     }
 
     private String doGenerateToken(Map<String, Object> claims, String username) {
-        long JWT_TOKEN_VALIDITY = 1000 * 60 * 60;
+        long JWT_TOKEN_VALIDITY = 5 * 24 * 60 * 60 * 1000;  //на 5 дней
         return Jwts.builder()
                 .claims(claims)
                 .subject(username)
