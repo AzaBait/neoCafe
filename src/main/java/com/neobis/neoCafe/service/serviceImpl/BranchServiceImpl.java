@@ -66,45 +66,6 @@ public class BranchServiceImpl implements BranchService {
         workScheduleRepo.save(workSchedule);
     }
 
-//    @Override
-//    public List<BranchDto> getAll() {
-//        try {
-//            List<Branch> branches = branchRepo.findAll();
-//            //List<BranchDto> branchDtos = branchMapper.branchListToBranchDtoList(branches);
-//            for (Branch branch : branches) {
-//                WorkScheduleDto workScheduleDto = workScheduleMapper.workScheduleToWorkScheduleDto(branch.getWorkSchedule());
-//                BranchDto branchDto = branchMapper.branchToBranchDto(branch);
-//                branchDto.setWorkScheduleDto(workScheduleDto);
-//                branchDtos.add(branchDto);
-//            }
-//            return branchDtos;
-//        } catch (RuntimeException e) {
-//            log.error("Не может получить данные из базы : ", e);
-//            throw new RuntimeException("Из базы не получается вытинуть данные");
-//        }
-
-//    @Override
-//    public List<BranchDto> getAll() {
-//        try {
-//            List<Branch> branches = branchRepo.findAll();
-//            List<BranchDto> branchDtos = branchMapper.branchListToBranchDtoList(branches);
-//            for (Branch branch : branches) {
-//                WorkScheduleDto workScheduleDto = workScheduleMapper.workScheduleToWorkScheduleDto(branch.getWorkSchedule());
-//                BranchDto branchDto = branchDtos.stream()
-//                        .filter(dto -> dto.getId().equals(branch.getId()))
-//                        .findFirst()
-//                        .orElseThrow(() -> new RuntimeException("BranchDto not found for branch with id: " + branch.getId()));
-//                branchDto.setWorkScheduleDto(workScheduleDto);
-//            }
-//            return branchDtos;
-//        } catch (RuntimeException e) {
-//            log.error("Не может получить данные из базы : ", e);
-//            throw new RuntimeException("Из базы не получается вытянуть данные");
-//        }
-//    }
-//
-//}
-
     @Override
     public List<BranchDto> getAll() {
         List<Branch> branches = branchRepo.findAll();
@@ -123,15 +84,4 @@ public class BranchServiceImpl implements BranchService {
 }
 
 
-
-
-//    @Override
-//    public List<Branch> getAll() {
-//        try {
-//            return branchRepo.findAll();
-//        } catch (RuntimeException e) {
-//            log.error("Не может получить данные из базы : ", e);
-//            throw new RuntimeException("Из базы не получается вытинуть данные");
-//        }
-//    }
 
