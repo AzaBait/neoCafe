@@ -66,8 +66,6 @@ public class BranchServiceImpl implements BranchService {
         workScheduleRepo.save(workSchedule);
     }
 
-
-
     @Override
     public List<BranchDto> getAll() {
         List<Branch> branches = branchRepo.findAll();
