@@ -11,7 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 @EntityScan(basePackages = "com.neobis.neoCafe")
 @ComponentScan(basePackages = "com.neobis.neoCafe")
 @OpenAPIDefinition(servers = {
-		@Server(url = "/", description = "Default Server URL")})
+		@Server(url = "http://neocafe-production.up.railway.app", description = "HTTP Server"),
+		@Server(url = "https://neocafe-production.up.railway.app", description = "HTTPS Server")})
 public class NeoCafeApplication {
 
 	public static void main(String[] args) {
