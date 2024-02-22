@@ -19,11 +19,7 @@ public class WorkSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "employee_work_schedule",
-            joinColumns = @JoinColumn(name = "work_schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    @OneToMany(mappedBy = "workSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<User> users;
     @OneToOne(mappedBy = "workSchedule")

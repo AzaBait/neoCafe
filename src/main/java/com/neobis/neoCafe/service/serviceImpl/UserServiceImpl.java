@@ -58,18 +58,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Филиал с указанным идентификатором не найден!");
                 }
             }
-            WorkSchedule workSchedule = new WorkSchedule();
-            workSchedule.setDayOfWeek(userDto.getWorkSchedule().getDayOfWeek());
-            workSchedule.setStartTime(userDto.getWorkSchedule().getStartTime());
-            workSchedule.setEndTime(userDto.getWorkSchedule().getEndTime());
-            workSchedule.setUsers(Collections.singletonList(user));
-            user.setWorkSchedule(workSchedule);
-            Optional<User> userWithEmail = userRepo.findByEmail(user.getEmail());
-            if (userWithEmail.isPresent()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Пользователь с такой электронной почтой уже существует!");
-            }
-
             if (user.getRole() != null) {
                 Optional<Role> roleOptional = roleRepo.findByName(user.getRole().getName());
                 Role role = roleOptional.orElseGet(() -> roleRepo.save(user.getRole()));
