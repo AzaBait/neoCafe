@@ -20,20 +20,6 @@ import java.util.stream.Collectors;
 public interface WorkScheduleMapper {
 
     WorkScheduleMapper INSTANCE = Mappers.getMapper(WorkScheduleMapper.class);
-//    @Named("mapToDayOfWeek")
-//    default DayOfWeek mapToDayOfWeek(String dayOfWeek) {
-//        if (dayOfWeek == null) {
-//            return null;
-//        }
-//        return DayOfWeek.valueOf(dayOfWeek.toUpperCase());
-//    }
-//    @Named("mapToString")
-//    default String mapToString(DayOfWeek dayOfWeek) {
-//        if (dayOfWeek == null) {
-//            return null;
-//        }
-//        return dayOfWeek.toString();
-//    }
     @Mapping(source = "dayOfWeek", target = "dayOfWeek")
     @Mapping(source = "startTime", target = "startTime")
     @Mapping(source = "endTime", target = "endTime")

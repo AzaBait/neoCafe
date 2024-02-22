@@ -30,9 +30,9 @@ public class User implements UserDetails {
     private String email;
     private Double bonus;
     private LocalDate birthday;
-    @ManyToMany(mappedBy = "users")
-    @ToString.Exclude
-    private List<WorkSchedule> workSchedules;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "work_schedule_id")
+    private WorkSchedule workSchedule;
     @ManyToOne
     @JoinColumn(name = "branch_id")
     private Branch branch;
