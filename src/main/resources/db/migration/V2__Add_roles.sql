@@ -1,6 +1,0 @@
-INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
-INSERT INTO roles (name) VALUES ('ROLE_BARMEN');
-INSERT INTO roles (name) VALUES ('ROLE_WAITER');
-
-INSERT INTO roles (name) VALUES ('ROLE_CUSTOMER');
-

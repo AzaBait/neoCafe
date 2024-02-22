@@ -19,7 +19,7 @@ public class WorkSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_work_schedule",
             joinColumns = @JoinColumn(name = "work_schedule_id"),

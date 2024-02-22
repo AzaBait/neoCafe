@@ -1,6 +1,7 @@
 package com.neobis.neoCafe.service;
 
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
+import com.neobis.neoCafe.dto.UserDto;
 import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.exception.EmailNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Optional;
 
 public interface UserService {
+
+    User createNewEmployee(UserDto userDto);
 
     void register(User user);
 

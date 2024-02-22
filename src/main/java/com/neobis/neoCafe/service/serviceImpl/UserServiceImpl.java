@@ -1,14 +1,14 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
-
-import com.neobis.neoCafe.entity.RegistrationCode;
-
-import com.neobis.neoCafe.entity.Role;
-import com.neobis.neoCafe.entity.User;
+import com.neobis.neoCafe.dto.UserDto;
+import com.neobis.neoCafe.entity.*;
 import com.neobis.neoCafe.exception.EmailNotFoundException;
 import com.neobis.neoCafe.exception.UsernameNotFoundException;
+import com.neobis.neoCafe.mapper.UserMapper;
+import com.neobis.neoCafe.repository.BranchRepo;
 import com.neobis.neoCafe.repository.RegistrationCodeRepo;
+import com.neobis.neoCafe.repository.RoleRepo;
 import com.neobis.neoCafe.repository.UserRepo;
 import com.neobis.neoCafe.service.EmailService;
 import com.neobis.neoCafe.service.RegistrationCodeService;
@@ -20,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,8 +38,49 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleService roleService;
     private final EmailService emailService;
     private final RegistrationCodeService registrationCodeService;
-    private RegistrationCodeRepo registrationCodeRepo;
+    private final RegistrationCodeRepo registrationCodeRepo;
+    private final UserMapper userMapper;
+    private final RoleRepo roleRepo;
+    private final BranchRepo branchRepo;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+
+    @Override
+    public User createNewEmployee(UserDto userDto) {
+        try {
+            User user = userMapper.employeeDtoToEmployee(userDto);
+            if (userDto.getBranchId() != null) {
+                Optional<Branch> branchOptional = branchRepo.findById(userDto.getBranchId());
+
+                if (branchOptional.isPresent()) {
+                    user.setBranch(branchOptional.get());
+                } else {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Филиал с указанным идентификатором не найден!");
+                }
+            }
+            WorkSchedule workSchedule = new WorkSchedule();
+            workSchedule.setDayOfWeek(userDto.getWorkSchedule().getDayOfWeek());
+            workSchedule.setStartTime(userDto.getWorkSchedule().getStartTime());
+            workSchedule.setEndTime(userDto.getWorkSchedule().getEndTime());
+            workSchedule.setUsers(Collections.singletonList(user));
+            user.setWorkSchedule(workSchedule);
+            Optional<User> userWithEmail = userRepo.findByEmail(user.getEmail());
+            if (userWithEmail.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Пользователь с такой электронной почтой уже существует!");
+            }
+
+            if (user.getRole() != null) {
+                Optional<Role> roleOptional = roleRepo.findByName(user.getRole().getName());
+                Role role = roleOptional.orElseGet(() -> roleRepo.save(user.getRole()));
+                user.setRole(role);
+            }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepo.save(user);
+        } catch (ResponseStatusException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void register(User user) {

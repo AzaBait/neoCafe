@@ -10,8 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EntityScan(basePackages = "com.neobis.neoCafe")
 @ComponentScan(basePackages = "com.neobis.neoCafe")
-//@OpenAPIDefinition(servers = {
-//		@Server(url = "/", description = "Default Server URL")})
 public class NeoCafeApplication {
 
 	public static void main(String[] args) {

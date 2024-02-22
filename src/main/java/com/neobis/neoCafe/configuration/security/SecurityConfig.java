@@ -43,14 +43,21 @@ public class SecurityConfig {
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/register", "/api/verifyRegistrationCode", "/api/admin/auth",
+                        .requestMatchers(
+                                "/api/register",
+                                "/api/verifyRegistrationCode",
+                                "/api/admin/auth",
                                 "/error",
                                 "/api/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/admin/newBranch").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/admin/listOfBranches").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/branch/newBranch").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/branch/listOfBranches").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/branch/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/branch/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/branch/{id}").hasRole("ADMIN")
+                        .requestMatchers("/api/employees/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
 

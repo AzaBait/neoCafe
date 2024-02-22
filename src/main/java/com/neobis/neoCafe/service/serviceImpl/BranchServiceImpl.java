@@ -14,6 +14,7 @@ import com.neobis.neoCafe.service.BranchService;
 import com.neobis.neoCafe.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -80,6 +81,54 @@ public class BranchServiceImpl implements BranchService {
 
         log.info("Found {} branches", branches.size());
         return branchDtos;
+    }
+
+    @Override
+    public BranchDto getById(Long id) {
+        Branch branch = branchRepo.findById(id).orElseThrow(()
+                -> new IllegalStateException("Branch with id " + id + " does not exist"));
+        return branchMapper.branchToBranchDto(branch);
+    }
+
+    @Override
+    public ResponseEntity<String> deleteBranch(Long id) {
+        Branch branch = branchRepo.findById(id).orElseThrow(()
+        -> new IllegalStateException("Branch with id " + id + " does not exist"));
+        branchRepo.deleteById(branch.getId());
+        return ResponseEntity.ok("Branch with id " + id + " successfully deleted");
+    }
+
+    @Override
+    public BranchDto updateBranch(Long id, BranchDto branchDto, WorkScheduleDto workScheduleDto) {
+        Branch branchInDB;
+        try {
+            branchInDB = branchRepo.findById(id).orElseThrow(() ->
+                    new IllegalStateException("Branch with id " + id + " does not exist"));
+            branchInDB.setName(branchDto.getName());
+            branchInDB.setAddress(branchDto.getAddress());
+            branchInDB.setGisUrl(branchDto.getGisUrl());
+            branchInDB.setPhoneNumber(branchDto.getPhoneNumber());
+            branchInDB.setTableCount(branchDto.getTableCount());
+            if (branchDto.getImage() != null) {
+                Image image = new Image();
+                image.setUrl(branchDto.getImage());
+                branchInDB.setImage(image);
+            }
+            WorkSchedule workSchedule = branchInDB.getWorkSchedule();
+            if (workSchedule != null && workScheduleDto != null) {
+                workSchedule.setDayOfWeek(workScheduleDto.getDayOfWeek());
+                workSchedule.setEndTime(workScheduleDto.getEndTime());
+                workSchedule.setStartTime(workScheduleDto.getStartTime());
+                workScheduleRepo.save(workSchedule);
+            }
+            branchRepo.save(branchInDB);
+
+
+            return branchMapper.branchToBranchDto(branchInDB);
+
+        }catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
 
