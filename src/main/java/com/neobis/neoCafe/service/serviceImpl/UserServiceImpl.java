@@ -6,6 +6,7 @@ import com.neobis.neoCafe.entity.*;
 import com.neobis.neoCafe.exception.EmailNotFoundException;
 import com.neobis.neoCafe.exception.UsernameNotFoundException;
 import com.neobis.neoCafe.mapper.UserMapper;
+import com.neobis.neoCafe.mapper.WorkScheduleMapper;
 import com.neobis.neoCafe.repository.BranchRepo;
 import com.neobis.neoCafe.repository.RegistrationCodeRepo;
 import com.neobis.neoCafe.repository.RoleRepo;
@@ -14,6 +15,7 @@ import com.neobis.neoCafe.service.EmailService;
 import com.neobis.neoCafe.service.RegistrationCodeService;
 import com.neobis.neoCafe.service.RoleService;
 import com.neobis.neoCafe.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleRepo roleRepo;
     private final BranchRepo branchRepo;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final WorkScheduleMapper workScheduleMapper;
 
 
     @Override
@@ -153,6 +156,43 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> user = userRepo.findByEmail(email);
         return user.orElseThrow(() -> new EmailNotFoundException
                 ("Пользователя с такой почтой " + email + " не найдено!"));
+    }
+
+    @Override
+    public User updateEmployee(Long id, UserDto userDto) {
+    try {
+        User existingUser = userRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Сотрудник с id " + id+ " не найден"));
+
+        existingUser.setUsername(userDto.getUsername());
+        existingUser.setPassword(userDto.getPassword());
+        existingUser.setFirstname(userDto.getFirstname());
+        existingUser.setEmail(userDto.getEmail());
+        if (userDto.getRole() != null) {
+            Optional<Role> roleOptional = roleRepo.findByName(userDto.getRole());
+            Role role = roleOptional.orElseThrow(() -> new EntityNotFoundException("Роль не найдена: " + userDto.getRole()));
+            existingUser.setRole(role);
+        }
+        if (userDto.getBranchId() != null) {
+            Optional<Branch> branchOptional = branchRepo.findById(userDto.getBranchId());
+            Branch branch = branchOptional.orElseThrow(() -> new EntityNotFoundException("Филиал с id " + userDto.getBranchId() + " не найден"));
+            existingUser.setBranch(branch);
+        } else {
+            existingUser.setBranch(null);
+        }
+        if (userDto.getWorkSchedule() != null) {
+            WorkSchedule workSchedule = workScheduleMapper.workScheduleDtoToWorkSchedule(userDto.getWorkSchedule());
+            existingUser.setWorkSchedule(workSchedule);
+        }else {
+            existingUser.setWorkSchedule(null);
+        }
+        return userRepo.save(existingUser);
+    } catch (EntityNotFoundException e) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+    } catch (Exception e) {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при обновлении сотрудника", e);
+    }
+
     }
 
 }

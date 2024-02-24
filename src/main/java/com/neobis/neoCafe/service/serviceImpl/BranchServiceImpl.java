@@ -33,7 +33,7 @@ public class BranchServiceImpl implements BranchService {
     private final WorkScheduleMapper workScheduleMapper;
 
     @Override
-    public Branch save(BranchDto branchDto, WorkScheduleDto workScheduleDto, MultipartFile file) {
+    public Branch save(BranchDto branchDto, MultipartFile file) {
         try {
             Branch branch = branchMapper.branchDtoToBranch(branchDto);
             String imageUrl = cloudinaryService.uploadImage(file);
@@ -44,13 +44,6 @@ public class BranchServiceImpl implements BranchService {
             branchImage.setUrl(imageUrl);
             branch.setImage(branchImage);
             branch = branchRepo.save(branch);
-
-            if (workScheduleDto != null) {
-                WorkSchedule workSchedule = workScheduleMapper.workScheduleDtoToWorkSchedule(workScheduleDto);
-                workSchedule.setBranch(branch);
-                branch.setWorkSchedule(workSchedule);
-                workScheduleRepo.save(workSchedule);
-            }
 
             return branch;
         } catch (RuntimeException e) {
@@ -99,7 +92,7 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchDto updateBranch(Long id, BranchDto branchDto, WorkScheduleDto workScheduleDto) {
+    public BranchDto updateBranch(Long id, BranchDto branchDto) {
         Branch branchInDB;
         try {
             branchInDB = branchRepo.findById(id).orElseThrow(() ->
@@ -113,13 +106,6 @@ public class BranchServiceImpl implements BranchService {
                 Image image = new Image();
                 image.setUrl(branchDto.getImage());
                 branchInDB.setImage(image);
-            }
-            WorkSchedule workSchedule = branchInDB.getWorkSchedule();
-            if (workSchedule != null && workScheduleDto != null) {
-                workSchedule.setDayOfWeek(workScheduleDto.getDayOfWeek());
-                workSchedule.setEndTime(workScheduleDto.getEndTime());
-                workSchedule.setStartTime(workScheduleDto.getStartTime());
-                workScheduleRepo.save(workSchedule);
             }
             branchRepo.save(branchInDB);
 
