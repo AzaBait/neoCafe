@@ -20,5 +20,5 @@ public interface BranchService {
 
     ResponseEntity<String> deleteBranch(Long id);
 
-    BranchDto updateBranch(Long id, BranchDto branchDto);
+    BranchDto updateBranch(Long id, BranchDto branchDto, MultipartFile file);
 }

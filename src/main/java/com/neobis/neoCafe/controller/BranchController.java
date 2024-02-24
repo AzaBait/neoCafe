@@ -40,8 +40,9 @@ public class BranchController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<BranchDto> updateById(@PathVariable Long id,
-                                                @ModelAttribute BranchDto branchDto) {
-        BranchDto updatedbranchDto = branchService.updateBranch(id, branchDto);
+                                                @ModelAttribute BranchDto branchDto,
+                                                @RequestParam("file") MultipartFile file) {
+        BranchDto updatedbranchDto = branchService.updateBranch(id, branchDto, file);
         return ResponseEntity.ok(updatedbranchDto);
     }
 

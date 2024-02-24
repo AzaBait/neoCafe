@@ -92,9 +92,11 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchDto updateBranch(Long id, BranchDto branchDto) {
+    public BranchDto updateBranch(Long id, BranchDto branchDto, MultipartFile file) {
         Branch branchInDB;
         try {
+            String imageUrl = cloudinaryService.uploadImage(file);
+            String publicId = cloudinaryService.extractPublicId(imageUrl);
             branchInDB = branchRepo.findById(id).orElseThrow(() ->
                     new IllegalStateException("Branch with id " + id + " does not exist"));
             branchInDB.setName(branchDto.getName());
@@ -102,13 +104,12 @@ public class BranchServiceImpl implements BranchService {
             branchInDB.setGisUrl(branchDto.getGisUrl());
             branchInDB.setPhoneNumber(branchDto.getPhoneNumber());
             branchInDB.setTableCount(branchDto.getTableCount());
-            if (branchDto.getImage() != null) {
-                Image image = new Image();
-                image.setUrl(branchDto.getImage());
-                branchInDB.setImage(image);
-            }
-            branchRepo.save(branchInDB);
 
+            Image branchImage = new Image();
+            branchImage.setPublicId(publicId);
+            branchImage.setUrl(imageUrl);
+            branchInDB.setImage(branchImage);
+            branchRepo.save(branchInDB);
 
             return branchMapper.branchToBranchDto(branchInDB);
 
