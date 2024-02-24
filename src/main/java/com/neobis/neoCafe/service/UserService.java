@@ -25,4 +25,6 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     UserDetails loadUserByEmail(String email) throws EmailNotFoundException;
+
+    User updateEmployee(Long id, UserDto userDto);
 }

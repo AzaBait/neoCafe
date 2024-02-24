@@ -4,10 +4,7 @@ import com.neobis.neoCafe.dto.UserDto;
 import com.neobis.neoCafe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -19,6 +16,12 @@ public class EmployeeController {
     @PostMapping("/newEmployee")
     public ResponseEntity<UserDto> createNewEmployee(@RequestBody UserDto userDto) {
         userService.createNewEmployee(userDto);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateEmployee(@PathVariable Long id, @RequestBody UserDto userDto) {
+        userService.updateEmployee(id, userDto);
         return ResponseEntity.ok(userDto);
     }
 }

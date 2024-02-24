@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface BranchService {
 
-    Branch save(BranchDto branchDto, WorkScheduleDto workScheduleDto, MultipartFile file);
+    Branch save(BranchDto branchDto, MultipartFile file);
 
     void processWorkScheduleDto(WorkScheduleDto workScheduleDto);
 
@@ -20,5 +20,5 @@ public interface BranchService {
 
     ResponseEntity<String> deleteBranch(Long id);
 
-    BranchDto updateBranch(Long id, BranchDto branchDto, WorkScheduleDto workScheduleDto);
+    BranchDto updateBranch(Long id, BranchDto branchDto);
 }

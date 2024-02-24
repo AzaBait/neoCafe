@@ -27,12 +27,10 @@ public class BranchController {
     @PostMapping(value = "/newBranch", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<BranchDto> createNewBranch(@ModelAttribute BranchDto branchDto,
-                                                     @RequestParam("file") MultipartFile file,
-                                                     @ModelAttribute WorkScheduleDto workScheduleDto) {
+                                                     @RequestParam("file") MultipartFile file) {
         try {
-            Branch savedBranch = branchService.save(branchDto, workScheduleDto, file);
+            Branch savedBranch = branchService.save(branchDto, file);
             BranchDto savedBranchDto = branchMapper.branchToBranchDto(savedBranch);
-            savedBranchDto.setWorkScheduleDto(workScheduleDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBranchDto);
         }catch (Exception e) {
             log.error("Error occurred while processing request:", e);
@@ -42,9 +40,8 @@ public class BranchController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<BranchDto> updateById(@PathVariable Long id,
-                                                @ModelAttribute BranchDto branchDto,
-                                                @ModelAttribute WorkScheduleDto workScheduleDto) {
-        BranchDto updatedbranchDto = branchService.updateBranch(id, branchDto, workScheduleDto);
+                                                @ModelAttribute BranchDto branchDto) {
+        BranchDto updatedbranchDto = branchService.updateBranch(id, branchDto);
         return ResponseEntity.ok(updatedbranchDto);
     }
 
