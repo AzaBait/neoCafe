@@ -1,5 +1,6 @@
 package com.neobis.neoCafe.controller;
 
+import com.neobis.neoCafe.dto.AdminJwtRequest;
 import com.neobis.neoCafe.dto.JwtResponse;
 import com.neobis.neoCafe.dto.RegisterDto;
 import com.neobis.neoCafe.dto.RegistrationCodeRequest;
@@ -36,5 +37,16 @@ public class AuthorizationController {
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @PostMapping("/employee")
+    public ResponseEntity<?> createAuthToken(@RequestBody AdminJwtRequest jwtRequest) {
+
+        try {
+            String code = authorizationService.authByEmail(jwtRequest.getEmail());
+            return new ResponseEntity<>(new JwtResponse(code), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 }
