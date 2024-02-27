@@ -27,9 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -160,39 +158,73 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User updateEmployee(Long id, UserDto userDto) {
-    try {
-        User existingUser = userRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Сотрудник с id " + id+ " не найден"));
+        try {
+            User existingUser = userRepo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Сотрудник с id " + id + " не найден"));
 
-        existingUser.setUsername(userDto.getUsername());
-        existingUser.setPassword(userDto.getPassword());
-        existingUser.setFirstname(userDto.getFirstname());
-        existingUser.setEmail(userDto.getEmail());
-        if (userDto.getRole() != null) {
-            Optional<Role> roleOptional = roleRepo.findByName(userDto.getRole());
-            Role role = roleOptional.orElseThrow(() -> new EntityNotFoundException("Роль не найдена: " + userDto.getRole()));
-            existingUser.setRole(role);
+            existingUser.setUsername(userDto.getUsername());
+            existingUser.setPassword(userDto.getPassword());
+            existingUser.setFirstname(userDto.getFirstname());
+            existingUser.setEmail(userDto.getEmail());
+            existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+            if (userDto.getRole() != null) {
+                Optional<Role> roleOptional = roleRepo.findByName(userDto.getRole());
+                Role role = roleOptional.orElseThrow(() -> new EntityNotFoundException("Роль не найдена: " + userDto.getRole()));
+                existingUser.setRole(role);
+            }
+            if (userDto.getBranchId() != null) {
+                Optional<Branch> branchOptional = branchRepo.findById(userDto.getBranchId());
+                Branch branch = branchOptional.orElseThrow(() -> new EntityNotFoundException("Филиал с id " + userDto.getBranchId() + " не найден"));
+                existingUser.setBranch(branch);
+            } else {
+                existingUser.setBranch(null);
+            }
+            if (userDto.getWorkSchedule() != null) {
+                WorkSchedule workSchedule = workScheduleMapper.workScheduleDtoToWorkSchedule(userDto.getWorkSchedule());
+                existingUser.setWorkSchedule(workSchedule);
+            } else {
+                existingUser.setWorkSchedule(null);
+            }
+            return userRepo.save(existingUser);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при обновлении сотрудника", e);
         }
-        if (userDto.getBranchId() != null) {
-            Optional<Branch> branchOptional = branchRepo.findById(userDto.getBranchId());
-            Branch branch = branchOptional.orElseThrow(() -> new EntityNotFoundException("Филиал с id " + userDto.getBranchId() + " не найден"));
-            existingUser.setBranch(branch);
-        } else {
-            existingUser.setBranch(null);
-        }
-        if (userDto.getWorkSchedule() != null) {
-            WorkSchedule workSchedule = workScheduleMapper.workScheduleDtoToWorkSchedule(userDto.getWorkSchedule());
-            existingUser.setWorkSchedule(workSchedule);
-        }else {
-            existingUser.setWorkSchedule(null);
-        }
-        return userRepo.save(existingUser);
-    } catch (EntityNotFoundException e) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-    } catch (Exception e) {
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при обновлении сотрудника", e);
+
     }
 
+    @Override
+    public UserDto getById(Long id) {
+
+        User user = userRepo.findById(id).orElseThrow(() -> new IllegalStateException("Пользователь с ID " + id + " не найден."));
+        return userMapper.employeeToEmployeeDto(user);
     }
+
+    @Override
+    public String deleteUser(Long id) {
+        try {
+            userRepo.deleteById(id);
+            return "Пользователь с ID " + id + " успешно удален.";
+        } catch (Exception e) {
+            return "Ошибка при удалении пользователя с ID " + id + ".";
+        }
+    }
+    @Override
+    public List<UserDto> getAllUsers() {
+        try {
+            List<User> users = userRepo.findAll();
+            List<UserDto> userDtos = new ArrayList<>();
+            for (User user : users) {
+                userDtos.add(UserMapper.INSTANCE.employeeToEmployeeDto(user));
+            }
+            return userDtos;
+        } catch (Exception e) {
+            System.err.println("Ошибка при получении всех пользователей: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
 
 }

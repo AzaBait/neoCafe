@@ -1,7 +1,6 @@
 package com.neobis.neoCafe.controller;
 
 import com.neobis.neoCafe.dto.BranchDto;
-import com.neobis.neoCafe.dto.WorkScheduleDto;
 import com.neobis.neoCafe.entity.Branch;
 import com.neobis.neoCafe.mapper.BranchMapper;
 import com.neobis.neoCafe.service.BranchService;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,12 +32,13 @@ public class BranchController {
             Branch savedBranch = branchService.save(branchDto, file);
             BranchDto savedBranchDto = branchMapper.branchToBranchDto(savedBranch);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBranchDto);
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error occurred while processing request:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<BranchDto> updateById(@PathVariable Long id,
                                                 @ModelAttribute BranchDto branchDto,

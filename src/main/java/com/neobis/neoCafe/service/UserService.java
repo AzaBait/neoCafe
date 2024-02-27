@@ -6,6 +6,7 @@ import com.neobis.neoCafe.entity.User;
 import com.neobis.neoCafe.exception.EmailNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -27,4 +28,10 @@ public interface UserService {
     UserDetails loadUserByEmail(String email) throws EmailNotFoundException;
 
     User updateEmployee(Long id, UserDto userDto);
+
+    UserDto getById(Long id);
+
+    String deleteUser(Long id);
+
+    List<UserDto> getAllUsers();
 }
