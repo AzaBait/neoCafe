@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/api/register",
-                                "/api/verifyRegistrationCode",
+                                "/api/verifyCode",
                                 "/api/admin/auth",
                                 "/error",
                                 "/api/auth/**",
