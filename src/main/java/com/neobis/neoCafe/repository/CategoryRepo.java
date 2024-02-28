@@ -1,5 +1,6 @@
 package com.neobis.neoCafe.repository;
 
+import com.neobis.neoCafe.dto.CategoryDto;
 import com.neobis.neoCafe.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
