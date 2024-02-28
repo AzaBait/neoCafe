@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,"/api/branch/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT,"/api/branch/{id}").hasRole("ADMIN")
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
+                        .requestMatchers("api/category/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
 
