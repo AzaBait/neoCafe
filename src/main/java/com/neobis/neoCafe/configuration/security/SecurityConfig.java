@@ -59,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/branch/{id}").hasRole("ADMIN")
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
                         .requestMatchers("api/category/**").hasRole("ADMIN")
+                        .requestMatchers("api/product/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
 

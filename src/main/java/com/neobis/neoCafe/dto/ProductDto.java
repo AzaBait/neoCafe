@@ -13,7 +13,7 @@ public class ProductDto {
     private String name;
     private String description;
     private Double price;
-    private Image image;
+    private String image;
     private List<CoffeeCompositionDto> compositions;
-    private BranchDto branchDto;
+    private String branchId;
 }
