@@ -33,10 +33,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<Product> getById(Long id) {
+    public Optional<ProductDto> getById(Long id) {
         Product product = productRepo.findById(id).orElseThrow(()
                 -> new IllegalStateException("Product with id " + id + " does not exist!"));
-        return Optional.ofNullable(product);
+        ProductDto productDto = productMapper.entityToDto(product);
+        return Optional.ofNullable(productDto);
     }
 
     @Override
@@ -81,8 +82,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepo.findAll();
+    public List<ProductDto> getAllProducts() {
+        List<Product> products = productRepo.findAll();
+        return productMapper.entitiesToDtos(products);
     }
 
     @Override

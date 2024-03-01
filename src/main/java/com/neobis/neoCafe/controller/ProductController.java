@@ -21,8 +21,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> productOptional = productService.getById(id);
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+        Optional<ProductDto> productOptional = productService.getById(id);
         return productOptional
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -46,8 +46,8 @@ public class ProductController {
     }
 
     @GetMapping("/productList")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 

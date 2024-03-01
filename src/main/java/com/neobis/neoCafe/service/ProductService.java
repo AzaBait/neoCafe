@@ -12,13 +12,13 @@ public interface ProductService {
 
     Optional<Product> findByName(String name);
 
-    Optional<Product> getById(Long id);
+    Optional<ProductDto> getById(Long id);
 
     ResponseEntity<String> update(Long id, ProductDto product, MultipartFile imageFile);
 
     ResponseEntity<String> deleteProduct(Long id);
 
-    List<Product> getAllProducts();
+    List<ProductDto> getAllProducts();
     ResponseEntity<Product> save(ProductDto product, MultipartFile imageFile);
 
 }
