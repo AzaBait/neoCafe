@@ -1,5 +1,6 @@
 package com.neobis.neoCafe.service;
 
+import com.neobis.neoCafe.dto.MenuDto;
 import com.neobis.neoCafe.dto.ProductDto;
 import com.neobis.neoCafe.entity.Product;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public interface ProductService {
 
     ResponseEntity<String> deleteProduct(Long id);
 
-    List<ProductDto> getAllProducts();
-    ResponseEntity<Product> save(ProductDto product, MultipartFile imageFile);
+    List<MenuDto> getAllProducts();
+    ResponseEntity<Product> save(MenuDto menuDto, MultipartFile imageFile);
 
 }

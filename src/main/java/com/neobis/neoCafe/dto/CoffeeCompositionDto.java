@@ -11,5 +11,4 @@ public class CoffeeCompositionDto {
     private IngredientDto ingredientDto;
     private WarehouseDto warehouseDto;
     private Double quantity;
-    private ProductDto productDto;
 }

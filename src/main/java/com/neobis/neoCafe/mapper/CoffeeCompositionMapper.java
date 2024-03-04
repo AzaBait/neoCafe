@@ -5,7 +5,7 @@ import com.neobis.neoCafe.entity.CoffeeComposition;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = IngredientMapper.class)
 public interface CoffeeCompositionMapper {
 
     CoffeeCompositionMapper INSTANCE = Mappers.getMapper(CoffeeCompositionMapper.class);

@@ -1,7 +1,6 @@
 package com.neobis.neoCafe.dto;
 
 import com.neobis.neoCafe.entity.Category;
-import com.neobis.neoCafe.entity.Image;
 import lombok.Data;
 
 import java.util.List;

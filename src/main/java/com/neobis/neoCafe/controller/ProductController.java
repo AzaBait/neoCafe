@@ -1,5 +1,6 @@
 package com.neobis.neoCafe.controller;
 
+import com.neobis.neoCafe.dto.MenuDto;
 import com.neobis.neoCafe.dto.ProductDto;
 import com.neobis.neoCafe.entity.Product;
 import com.neobis.neoCafe.service.ProductService;
@@ -30,9 +31,9 @@ public class ProductController {
 
     @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
                     produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Product> createProduct(@ModelAttribute ProductDto productDto,
+    public ResponseEntity<Product> createProduct(@ModelAttribute MenuDto menuDto,
                                                  @RequestParam("file") MultipartFile file) {
-        return productService.save(productDto, file);
+        return productService.save(menuDto, file);
     }
 
     @PutMapping("/{id}")
@@ -46,8 +47,8 @@ public class ProductController {
     }
 
     @GetMapping("/productList")
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
-        List<ProductDto> products = productService.getAllProducts();
+    public ResponseEntity<List<MenuDto>> getAllProducts() {
+        List<MenuDto> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
