@@ -1,8 +1,10 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
+import com.neobis.neoCafe.dto.MenuDto;
 import com.neobis.neoCafe.dto.ProductDto;
 import com.neobis.neoCafe.entity.Image;
 import com.neobis.neoCafe.entity.Product;
+import com.neobis.neoCafe.mapper.MenuMapper;
 import com.neobis.neoCafe.mapper.ProductMapper;
 import com.neobis.neoCafe.repository.ProductRepo;
 import com.neobis.neoCafe.service.CloudinaryService;
@@ -25,6 +27,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepo productRepo;
     private final ProductMapper productMapper;
     private final CloudinaryService cloudinaryService;
+    private final MenuMapper menuMapper;
+
     @Override
     public Optional<Product> findByName(String name) {
         Product product = productRepo.findByName(name).orElseThrow(()
@@ -82,15 +86,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public List<MenuDto> getAllProducts() {
         List<Product> products = productRepo.findAll();
-        return productMapper.entitiesToDtos(products);
+        return menuMapper.entitiesToDtos(products);
     }
 
     @Override
-    public ResponseEntity<Product> save(ProductDto productDto, MultipartFile imageFile) {
+    public ResponseEntity<Product> save(MenuDto menuDto, MultipartFile imageFile) {
         try {
-            Product product = productMapper.dtoToEntity(productDto);
+            Product product = menuMapper.menuDtoToProduct(menuDto);
             String imageUrl = cloudinaryService.uploadImage(imageFile);
             String publicId = cloudinaryService.extractPublicId(imageUrl);
 
@@ -101,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
             product = productRepo.save(product);
 
             return ResponseEntity.ok(product);
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             log.error("Error occurred while saving product:", e);
             throw new RuntimeException("Could not save product to the database", e);
         }
