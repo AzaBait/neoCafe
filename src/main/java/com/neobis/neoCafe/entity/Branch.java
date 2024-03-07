@@ -16,17 +16,17 @@ public class Branch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "image_id")
     private Image image;
     private String address;
     private String gisUrl;
     private String phoneNumber;
     private int tableCount;
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "branchId", referencedColumnName = "id")
     private List<WorkSchedule> workSchedule;
     @OneToMany(mappedBy = "branch")
-    @ToString.Exclude
     private List<Product> availableProducts;
 
     @Override

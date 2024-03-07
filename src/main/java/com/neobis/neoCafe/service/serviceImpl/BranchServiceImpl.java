@@ -52,14 +52,6 @@ public class BranchServiceImpl implements BranchService {
         }
     }
 
-//    @Override
-//    public void processWorkScheduleDto(WorkScheduleDto workScheduleDto) {
-//        List<DayOfWeek> daysOfWeek = workScheduleDto.getDayOfWeek();
-//        WorkSchedule workSchedule = new WorkSchedule();
-//        workSchedule.setDayOfWeek(daysOfWeek);
-//        workScheduleRepo.save(workSchedule);
-//    }
-
     @Override
     public List<BranchDto> getAll() {
         List<Branch> branches = branchRepo.findAll();
@@ -67,7 +59,6 @@ public class BranchServiceImpl implements BranchService {
 
         for (Branch branch : branches) {
             BranchDto branchDto = branchMapper.branchToBranchDto(branch);
-            branchDto.setWorkScheduleDto(workScheduleMapper.workScheduleListToWorkScheduleDtoList(branch.getWorkSchedule()));
             branchDtos.add(branchDto);
         }
 

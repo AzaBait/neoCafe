@@ -22,9 +22,6 @@ public class WorkSchedule {
     @OneToMany(mappedBy = "workSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<User> users;
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
     @Temporal(TemporalType.TIME)
