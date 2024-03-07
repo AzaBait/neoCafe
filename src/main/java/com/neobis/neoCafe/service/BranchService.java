@@ -12,7 +12,7 @@ public interface BranchService {
 
     Branch save(BranchDto branchDto, MultipartFile file);
 
-    void processWorkScheduleDto(WorkScheduleDto workScheduleDto);
+ //   void processWorkScheduleDto(WorkScheduleDto workScheduleDto);
 
     List<BranchDto> getAll();
 

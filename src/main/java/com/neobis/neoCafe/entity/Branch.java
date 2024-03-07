@@ -1,14 +1,12 @@
 package com.neobis.neoCafe.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -25,11 +23,24 @@ public class Branch {
     private String gisUrl;
     private String phoneNumber;
     private int tableCount;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "work_schedule_id")
-    private WorkSchedule workSchedule;
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<WorkSchedule> workSchedule;
     @OneToMany(mappedBy = "branch")
     @ToString.Exclude
     private List<Product> availableProducts;
 
+    @Override
+    public String toString() {
+        return "Branch{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", image=" + image +
+                ", address='" + address + '\'' +
+                ", gisUrl='" + gisUrl + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", tableCount=" + tableCount +
+                ", workSchedule=" + workSchedule +
+                ", availableProducts=" + availableProducts +
+                '}';
+    }
 }
