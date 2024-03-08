@@ -12,6 +12,7 @@ public interface IngredientMapper {
     @Mapping(target = "warehouseDto", ignore = true)
     @Mapping(target = "isRunningOut", ignore = true)
     @Mapping(target = "ingredientType", ignore = true)
+    @Mapping(target = "quantity", ignore = true)
     IngredientDto entityToDto(Ingredient ingredient);
     Ingredient dtoToEntity(IngredientDto ingredientDto);
 

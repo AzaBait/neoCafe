@@ -2,6 +2,8 @@ package com.neobis.neoCafe.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class BranchDto {
 
@@ -12,5 +14,5 @@ public class BranchDto {
     private String gisUrl;
     private String phoneNumber;
     private int tableCount;
-    private WorkScheduleDto workScheduleDto;
+    private List<WorkScheduleDto> workScheduleDto;
 }

@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {WorkScheduleMapper.class})
 public interface BranchMapper {
 
     BranchMapper INSTANCE = Mappers.getMapper(BranchMapper.class);
@@ -24,6 +24,7 @@ public interface BranchMapper {
     Branch branchDtoToBranch(BranchDto branchDto);
 
     List<BranchDto> branchListToBranchDtoList(List<Branch> branches);
+
 }
 
 

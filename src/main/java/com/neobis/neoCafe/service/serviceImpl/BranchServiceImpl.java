@@ -1,11 +1,8 @@
 package com.neobis.neoCafe.service.serviceImpl;
 
 import com.neobis.neoCafe.dto.BranchDto;
-import com.neobis.neoCafe.dto.WorkScheduleDto;
 import com.neobis.neoCafe.entity.Branch;
 import com.neobis.neoCafe.entity.Image;
-import com.neobis.neoCafe.entity.WorkSchedule;
-import com.neobis.neoCafe.enums.DayOfWeek;
 import com.neobis.neoCafe.mapper.BranchMapper;
 import com.neobis.neoCafe.mapper.WorkScheduleMapper;
 import com.neobis.neoCafe.repository.BranchRepo;
@@ -29,8 +26,6 @@ public class BranchServiceImpl implements BranchService {
     private final BranchRepo branchRepo;
     private final CloudinaryService cloudinaryService;
     private final BranchMapper branchMapper;
-    private final WorkScheduleRepo workScheduleRepo;
-    private final WorkScheduleMapper workScheduleMapper;
 
     @Override
     public Branch save(BranchDto branchDto, MultipartFile file) {
@@ -53,22 +48,12 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public void processWorkScheduleDto(WorkScheduleDto workScheduleDto) {
-        List<DayOfWeek> daysOfWeek = workScheduleDto.getDayOfWeek();
-        WorkSchedule workSchedule = new WorkSchedule();
-        workSchedule.setDayOfWeek(daysOfWeek);
-        workScheduleRepo.save(workSchedule);
-    }
-
-    @Override
     public List<BranchDto> getAll() {
         List<Branch> branches = branchRepo.findAll();
         List<BranchDto> branchDtos = new ArrayList<>();
 
         for (Branch branch : branches) {
             BranchDto branchDto = branchMapper.branchToBranchDto(branch);
-            WorkScheduleDto workScheduleDto = workScheduleMapper.workScheduleToWorkScheduleDto(branch.getWorkSchedule());
-            branchDto.setWorkScheduleDto(workScheduleDto);
             branchDtos.add(branchDto);
         }
 
@@ -86,37 +71,40 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public ResponseEntity<String> deleteBranch(Long id) {
         Branch branch = branchRepo.findById(id).orElseThrow(()
-        -> new IllegalStateException("Branch with id " + id + " does not exist"));
+                -> new IllegalStateException("Branch with id " + id + " does not exist"));
         branchRepo.deleteById(branch.getId());
         return ResponseEntity.ok("Branch with id " + id + " successfully deleted");
     }
 
     @Override
     public BranchDto updateBranch(Long id, BranchDto branchDto, MultipartFile file) {
-        Branch branchInDB;
         try {
-            String imageUrl = cloudinaryService.uploadImage(file);
-            String publicId = cloudinaryService.extractPublicId(imageUrl);
-            branchInDB = branchRepo.findById(id).orElseThrow(() ->
+            Branch branchInDB = branchRepo.findById(id).orElseThrow(() ->
                     new IllegalStateException("Branch with id " + id + " does not exist"));
-            branchInDB.setName(branchDto.getName());
-            branchInDB.setAddress(branchDto.getAddress());
-            branchInDB.setGisUrl(branchDto.getGisUrl());
-            branchInDB.setPhoneNumber(branchDto.getPhoneNumber());
-            branchInDB.setTableCount(branchDto.getTableCount());
 
-            Image branchImage = new Image();
-            branchImage.setPublicId(publicId);
-            branchImage.setUrl(imageUrl);
-            branchInDB.setImage(branchImage);
-            branchRepo.save(branchInDB);
+            Branch updatedBranch = branchMapper.branchDtoToBranch(branchDto);
 
-            return branchMapper.branchToBranchDto(branchInDB);
+            if (file != null && !file.isEmpty()) {
+                String imageUrl = cloudinaryService.uploadImage(file);
+                String publicId = cloudinaryService.extractPublicId(imageUrl);
 
-        }catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+                Image branchImage = new Image();
+                branchImage.setPublicId(publicId);
+                branchImage.setUrl(imageUrl);
+                updatedBranch.setImage(branchImage);
+            }
+
+            updatedBranch.setId(id);
+
+            Branch savedBranch = branchRepo.save(updatedBranch);
+
+            return branchMapper.branchToBranchDto(savedBranch);
+        } catch (Exception e) {
+            log.error("Error occurred while updating branch:", e);
+            throw new RuntimeException("Could not update branch in the database", e);
         }
     }
+
 }
 
 

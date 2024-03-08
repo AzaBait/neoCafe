@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.neobis.neoCafe")
-@ComponentScan(basePackages = "com.neobis.neoCafe")
+@ComponentScan(basePackages = {"com.neobis.neoCafe", "com.neobis.neoCafe.mapper"})
 public class NeoCafeApplication {
 
 	public static void main(String[] args) {

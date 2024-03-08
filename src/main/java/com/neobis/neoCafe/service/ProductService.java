@@ -20,6 +20,7 @@ public interface ProductService {
     ResponseEntity<String> deleteProduct(Long id);
 
     List<MenuDto> getAllProducts();
+
     ResponseEntity<Product> save(MenuDto menuDto, MultipartFile imageFile);
 
 }

@@ -22,10 +22,8 @@ public class WorkSchedule {
     @OneToMany(mappedBy = "workSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<User> users;
-    @OneToOne(mappedBy = "workSchedule")
-    private Branch branch;
     @Enumerated(EnumType.STRING)
-    private List<DayOfWeek> dayOfWeek;
+    private DayOfWeek dayOfWeek;
     @Temporal(TemporalType.TIME)
     private LocalTime startTime;
     @Temporal(TemporalType.TIME)
