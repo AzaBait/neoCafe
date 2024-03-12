@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         ),
         servers = {
                 @Server(
-                        description = "HTTP Server", url = "http://localhost:8080"
+                        description = "HTTP Server", url = "http://localhost:8080/swagger-ui/index.html"
                 ),
                 @Server(
                         description = "HTTPS Server", url = "https://neocafe-production.up.railway.app"

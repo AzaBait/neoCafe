@@ -21,6 +21,6 @@ public interface ProductService {
 
     List<MenuDto> getAllProducts();
 
-    ResponseEntity<Product> save(MenuDto menuDto, MultipartFile imageFile);
+    Product save(MenuDto menuDto, MultipartFile imageFile);
 
 }

@@ -3,8 +3,10 @@ package com.neobis.neoCafe.controller;
 import com.neobis.neoCafe.dto.MenuDto;
 import com.neobis.neoCafe.dto.ProductDto;
 import com.neobis.neoCafe.entity.Product;
+import com.neobis.neoCafe.mapper.MenuMapper;
 import com.neobis.neoCafe.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ public class ProductController {
 
 
     private final ProductService productService;
+    private final MenuMapper menuMapper;
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
@@ -31,9 +34,15 @@ public class ProductController {
 
     @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
                     produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Product> createProduct(@ModelAttribute MenuDto menuDto,
+    public ResponseEntity<MenuDto> createProduct(@ModelAttribute MenuDto menuDto,
                                                  @RequestParam("file") MultipartFile file) {
-        return productService.save(menuDto, file);
+        try {
+            Product product = productService.save(menuDto, file);
+            MenuDto savedMenuDto = menuMapper.productToMenuDto(product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedMenuDto);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")

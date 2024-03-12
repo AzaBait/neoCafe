@@ -12,8 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {WorkScheduleMapper.class})
 public interface BranchMapper {
 
-    BranchMapper INSTANCE = Mappers.getMapper(BranchMapper.class);
-
     @Mapping(source = "image.url", target = "image")
     @Mapping(source = "workSchedule", target = "workScheduleDto")
     BranchDto branchToBranchDto(Branch branch);

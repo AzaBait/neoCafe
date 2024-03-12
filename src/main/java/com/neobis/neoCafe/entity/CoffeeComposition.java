@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -16,6 +18,7 @@ public class CoffeeComposition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Getter
     @ManyToOne
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
@@ -26,4 +29,5 @@ public class CoffeeComposition {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
 }

@@ -7,7 +7,6 @@ import java.util.List;
 @Data
 public class BranchDto {
 
-    private Long id;
     private String name;
     private String image;
     private String address;

@@ -24,7 +24,8 @@ public class Product {
     private String name;
     private String description;
     private Double price;
-    @OneToOne(mappedBy = "product")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id")
     private Image image;
     @OneToMany(mappedBy = "product")
     @ToString.Exclude

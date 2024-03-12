@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<Product> save(MenuDto menuDto, MultipartFile imageFile) {
+    public Product save(MenuDto menuDto, MultipartFile imageFile) {
         try {
             Product product = menuMapper.menuDtoToProduct(menuDto);
             String imageUrl = cloudinaryService.uploadImage(imageFile);
@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
             product.setImage(productImage);
             product = productRepo.save(product);
 
-            return ResponseEntity.ok(product);
+            return product;
         } catch (RuntimeException e) {
             log.error("Error occurred while saving product:", e);
             throw new RuntimeException("Could not save product to the database", e);

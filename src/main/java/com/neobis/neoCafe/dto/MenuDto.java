@@ -2,6 +2,8 @@ package com.neobis.neoCafe.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class MenuDto {
 
@@ -9,5 +11,5 @@ public class MenuDto {
     private String image;
     private CategoryDto category;
     private Double price;
-    private IngredientDto composition;
+    private List<IngredientDto> composition;
 }
