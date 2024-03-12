@@ -21,7 +21,7 @@ public class Ingredient {
     @Enumerated(EnumType.STRING)
     private IngredientType ingredientType;
     private Double quantity;
-    private boolean isRunningOut;
+    private Boolean isRunningOut;
     private String unitOfMeasure;
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
