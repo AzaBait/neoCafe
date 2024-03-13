@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class, IngredientMapper.class})
+
 public interface MenuMapper {
-
-
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "description", ignore = true)
@@ -23,10 +22,13 @@ public interface MenuMapper {
     @InheritInverseConfiguration
     MenuDto productToMenuDto(Product product);
 
-    default List<MenuDto> entitiesToDtos(List<Product> products){
-        return products.stream()
-                .map(this::productToMenuDto)
-                .collect(Collectors.toList());
-    }
+    List<MenuDto> entitiesToDtos(List<Product> products);
+    List<Product> dtosToEntities(List<MenuDto> menuDtoList);
+
+//    default List<MenuDto> entitiesToDtos(List<Product> products){
+//        return products.stream()
+//                .map(this::productToMenuDto)
+//                .collect(Collectors.toList());
+//    }
 
 }
